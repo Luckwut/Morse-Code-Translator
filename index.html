@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Morse Code Translator</title>
+</head>
+<body>
+    <div class="inputs area">
+        <h1>Morse to Text</h1>
+
+        <label for="input">Input Morse</label>
+        <textarea id="input" cols="30" rows="10" placeholder="Insert Morse Here. Use '.' for dot, use '-' or '_' for dashes, use ' ' (spaces) for each letter, use '/' for each word"></textarea>
+        <span class="valid">Invalid Symbols in Morse</span>
+
+        <label for="output">Output</label>
+        <textarea disabled id="output" cols="30" rows="10"></textarea>
+
+        <div class="buttons">
+            <button id="toggleTranslate">Text to Morse</button>
+            <button id="clear">Clear</button>
+            <button id="playSound">Play Morse Sound</button>
+        </div>
+    </div>
+
+    <hr>
+
+    <div class="help area">
+        <h1>Help/Info</h1>
+        <article>
+            <h3>&bull; Morse Help</h3>
+            <ul>
+                <li>Use <strong>'.'</strong> for <strong>Dot</strong>.</li>
+                <li>Use <strong>'-'</strong> or <strong>'_'</strong> for <strong>Dashes</strong>.</li>
+                <li>Use <strong>' ' &lpar;Spaces&rpar;</strong> for each <strong>letter</strong>.</li>
+                <li>Use <strong>'/'</strong> for each <strong>word</strong>.</li>
+            </ul>
+        </article>
+        <article>
+            <h3>&bull; Morse Codes</h3>
+            <div>
+                <img src="https://upload.wikimedia.org/wikipedia/commons/b/b5/International_Morse_Code.svg" alt="morseCode">
+            </div>
+        </article>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
