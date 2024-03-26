@@ -20,72 +20,97 @@ const morseCode = {
     '/':      ' '
 };
 
-let translateStatus = "morse";
-const input = document.getElementById('input');
-const output = document.getElementById('output');
 
-input.addEventListener('input', () => {
-    switch (translateStatus) {
-        case "morse":
-            output.value = morseToText(input.value);
-            break;
-        case "text":
-            output.value = textToMorse(input.value);
-            break;
-    }
-});
+const morseInput = document.getElementById('morseInput');
+const textInput = document.getElementById('textInput');
+morseInput.addEventListener('input', inputMorse);
+textInput.addEventListener('input', inputText);
 
-function textToMorse(text) {
-    return text.trim() // remove trailing white space
-                .replace(/\s+/g, " ") // remove extra whitespace
-                .toUpperCase()
-                .split("") // to Array
-                .map(char => { // create morse
-                    for (let morse in morseCode) {
-                        if (morseCode[morse] === char) return morse;
-                    }
-                    return char;
-                })
-                .join(' '); // join morse
-}
+
+const spanElement = document.querySelector('.inputs.area span');
 
 function morseToText(morse) {
-    return morse.trim() // remove trailing white space
-                .replace(/\s+/g, " ") // remove extra whitespace
-                .replace(/_/g, "-") // convert "_" to "-"
-                .split(" ") // to Array
-                .map(morse => { // create letter
-                    return morseCode[morse] ? morseCode[morse] : '';
-                })
-                .join(""); // join letter
+    const morseArr = morse.split(" "); // to Array
+
+    // Add Error Warning
+    const isValid = morseArr.every(morse => morseCode[morse] || morse === "");
+    spanElement.classList.toggle('valid', isValid);
+    morseInput.classList.toggle("inputWarn", !isValid);
+
+    return morseArr.map(morse => { // create morse
+        return morseCode[morse] ? morseCode[morse] : '';
+    }).join("");
+}
+
+function textToMorse(text) {
+    return text.split("") // to Array
+               .map(char => { // create morse
+                   for (let morse in morseCode) {
+                       if (morseCode[morse] === char) return morse;
+                   }
+                   return char;
+                 }).join(' '); // join morse
+}
+
+
+function inputMorse() {
+    const morseStr = morseInput.value
+                               .trim() // Remove Trailing Whitespace
+                               .replace(/\s+/g, " ") // Remove Extra whitespaces
+                               .replace(/_/g, "-"); // convert "_" to "-"
+    textInput.value = morseToText(morseStr);
+}
+
+function inputText() {
+    const textStr = textInput.value // Get Value
+                             .trim() // Remove Trailing Whitespace
+                             .replace(/\s+/g, " ") // Remove Extra whitespaces
+                             .toUpperCase(); // Uppercase str
+    morseInput.value = textToMorse(textStr);
 }
 
 
 const clearBTN = document.getElementById('clear');
-clearBTN.addEventListener('click', () => [input, output].forEach(input => input.value = ""));
-
-const toggleBTN = document.getElementById('toggleTranslate');
-toggleBTN.addEventListener('click', () => {
-    translateStatus = (translateStatus === "morse") ? "text" : "morse";
-    alterUI();
+clearBTN.addEventListener('click', () => {
+    textInput.value = "";
+    morseInput.value = "";
 });
 
-function alterUI() {
-    const title = document.querySelector('.inputs.area > h1');
-    const inputLabel = document.querySelector('.inputs.area > label:nth-child(2)');
 
-    switch (translateStatus) {
-        case "morse":
-            toggleBTN.textContent = "Text to Morse";
-            title.textContent = "Morse to Text";
-            input.placeholder = "Insert Morse Here. Use '.' for dot, use '-' or '_' for dashes, use ' ' (spaces) for each letter, use '/' for each word";
-            inputLabel.textContent = "Input Morse";
-            break;
-        case "text":
-            toggleBTN.textContent = "Morse to Text";
-            title.textContent = "Text to Morse";
-            input.placeholder = "Insert Text Here";
-            inputLabel.textContent = "Input Text";
-            break;
-    }
+const dotSound = new Audio('./Audio/dot.mp3');
+const dashSound = new Audio('./Audio/dash.mp3');
+const playMorseBTN = document.getElementById('playSound');
+playMorseBTN.addEventListener('click', () => {
+    playMorseSound(morseInput.value);
+});
+
+let timeout;
+function playMorseSound(morse) {
+    clearInterval(timeout);
+
+    const playSymbol = (symbol) => {
+        switch (symbol) {
+            case '.':
+                dotSound.play();
+                break;
+            case '-':
+            case '_':
+                dashSound.play();
+                break;
+            case '/':
+                setTimeout(() => {}, 800);
+                break;
+            default:
+                // spaces
+                break;
+        }
+    };
+
+    let index = 0;
+    timeout = setInterval(() => {
+        if (index < morse.length) {
+            playSymbol(morse[index]);
+            index++;
+        }
+    }, 300)
 }
