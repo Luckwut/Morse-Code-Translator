@@ -112,5 +112,5 @@ function playMorseSound(morse) {
             playSymbol(morse[index]);
             index++;
         }
-    }, 450)
+    }, 600)
 }
