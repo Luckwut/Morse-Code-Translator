@@ -98,7 +98,7 @@ function playMorseSound(morse) {
                 dashSound.play();
                 break;
             case '/':
-                setTimeout(() => {}, 800);
+                setTimeout(() => {}, 1000);
                 break;
             default:
                 // spaces
@@ -112,5 +112,5 @@ function playMorseSound(morse) {
             playSymbol(morse[index]);
             index++;
         }
-    }, 300)
+    }, 450)
 }
